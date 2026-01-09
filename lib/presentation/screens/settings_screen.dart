@@ -75,8 +75,9 @@ class _SettingsScreenContentState extends State<_SettingsScreenContent> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor =
-        isDark ? AppColors.backgroundDark : AppColors.backgroundLight;
+    final bgColor = isDark
+        ? AppColors.backgroundDark
+        : AppColors.backgroundLight;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -127,17 +128,15 @@ class _SettingsScreenContentState extends State<_SettingsScreenContent> {
                 builder: (context, viewModel, child) {
                   return ListView(
                     padding: const EdgeInsets.symmetric(
-                        vertical: AppDimens.paddingSmall),
+                      vertical: AppDimens.paddingSmall,
+                    ),
                     children: [
                       // Max Length Setting
                       NeumorphicCard(
                         onTap: () => _showMaxLengthDialog(context, viewModel),
                         child: Row(
                           children: [
-                            Icon(
-                              Icons.text_fields,
-                              color: AppColors.accent,
-                            ),
+                            Icon(Icons.text_fields, color: AppColors.accent),
                             const SizedBox(width: AppDimens.paddingMedium),
                             Expanded(
                               child: Column(
@@ -153,7 +152,9 @@ class _SettingsScreenContentState extends State<_SettingsScreenContent> {
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  const SizedBox(height: AppDimens.paddingXSmall),
+                                  const SizedBox(
+                                    height: AppDimens.paddingXSmall,
+                                  ),
                                   Text(
                                     'Xの投稿上限に合わせて設定',
                                     style: TextStyle(
@@ -213,7 +214,8 @@ class _SettingsScreenContentState extends State<_SettingsScreenContent> {
                                         ),
                                       ),
                                       const SizedBox(
-                                          height: AppDimens.paddingXSmall),
+                                        height: AppDimens.paddingXSmall,
+                                      ),
                                       Text(
                                         '画面の表示テーマを切り替え',
                                         style: TextStyle(
@@ -229,8 +231,9 @@ class _SettingsScreenContentState extends State<_SettingsScreenContent> {
                                 Switch(
                                   value: themeViewModel.isDarkMode,
                                   onChanged: themeViewModel.setThemeMode,
-                                  activeTrackColor:
-                                      AppColors.accent.withValues(alpha: 0.5),
+                                  activeTrackColor: AppColors.accent.withValues(
+                                    alpha: 0.5,
+                                  ),
                                   activeThumbColor: AppColors.accent,
                                 ),
                               ],
@@ -242,10 +245,7 @@ class _SettingsScreenContentState extends State<_SettingsScreenContent> {
                       NeumorphicCard(
                         child: Row(
                           children: [
-                            Icon(
-                              Icons.info_outline,
-                              color: AppColors.accent,
-                            ),
+                            Icon(Icons.info_outline, color: AppColors.accent),
                             const SizedBox(width: AppDimens.paddingMedium),
                             Expanded(
                               child: Column(
@@ -261,7 +261,9 @@ class _SettingsScreenContentState extends State<_SettingsScreenContent> {
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  const SizedBox(height: AppDimens.paddingXSmall),
+                                  const SizedBox(
+                                    height: AppDimens.paddingXSmall,
+                                  ),
                                   Text(
                                     'バージョン 1.0.0',
                                     style: TextStyle(

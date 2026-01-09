@@ -64,19 +64,23 @@ void main() {
         expect(entity.preview.length, 33); // 30 chars + '...'
       });
 
-      test('should return only first line with ellipsis for multiline content', () {
-        final entity = DraftEntity(
-          content: 'First line\nSecond line\nThird line',
-          createdAt: testDate,
-          updatedAt: testDate,
-        );
+      test(
+        'should return only first line with ellipsis for multiline content',
+        () {
+          final entity = DraftEntity(
+            content: 'First line\nSecond line\nThird line',
+            createdAt: testDate,
+            updatedAt: testDate,
+          );
 
-        expect(entity.preview, 'First line...');
-      });
+          expect(entity.preview, 'First line...');
+        },
+      );
 
       test('should truncate first line if longer than 30 chars in multiline', () {
         final entity = DraftEntity(
-          content: 'This is a very long first line that exceeds thirty\nSecond line',
+          content:
+              'This is a very long first line that exceeds thirty\nSecond line',
           createdAt: testDate,
           updatedAt: testDate,
         );

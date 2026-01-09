@@ -63,9 +63,9 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
     final content = viewModel.content;
 
     if (content.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('テキストを入力してください')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('テキストを入力してください')));
       return;
     }
 
@@ -73,10 +73,7 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
       await viewModel.saveDraft();
     }
 
-    await Share.share(
-      content,
-      sharePositionOrigin: sharePositionOrigin,
-    );
+    await Share.share(content, sharePositionOrigin: sharePositionOrigin);
   }
 
   Future<bool> _onWillPop(BuildContext context) async {
@@ -113,8 +110,9 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor =
-        isDark ? AppColors.backgroundDark : AppColors.backgroundLight;
+    final bgColor = isDark
+        ? AppColors.backgroundDark
+        : AppColors.backgroundLight;
 
     return Consumer<DraftEditViewModel>(
       builder: (context, viewModel, child) {
@@ -152,8 +150,7 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
                               context.pop(true);
                             }
                           },
-                          padding:
-                              const EdgeInsets.all(AppDimens.paddingSmall),
+                          padding: const EdgeInsets.all(AppDimens.paddingSmall),
                           borderRadius: AppDimens.radiusSmall,
                           child: Icon(
                             Icons.arrow_back,
@@ -186,16 +183,15 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
                               );
                             }
                           },
-                          padding:
-                              const EdgeInsets.all(AppDimens.paddingSmall),
+                          padding: const EdgeInsets.all(AppDimens.paddingSmall),
                           borderRadius: AppDimens.radiusSmall,
                           child: Icon(
                             Icons.save,
                             color: viewModel.hasChanges
                                 ? AppColors.accent
                                 : (isDark
-                                    ? AppColors.textSecondaryDark
-                                    : AppColors.textSecondary),
+                                      ? AppColors.textSecondaryDark
+                                      : AppColors.textSecondary),
                           ),
                         ),
                       ],
@@ -205,7 +201,8 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
                   Expanded(
                     child: NeumorphicTextFieldShell(
                       margin: const EdgeInsets.symmetric(
-                          horizontal: AppDimens.paddingMedium),
+                        horizontal: AppDimens.paddingMedium,
+                      ),
                       child: TextField(
                         controller: _controller,
                         maxLines: null,
@@ -296,10 +293,12 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
                             builder: (buttonContext) {
                               return NeumorphicButton(
                                 onPressed: () {
-                                  final box = buttonContext.findRenderObject()
-                                      as RenderBox;
-                                  final position =
-                                      box.localToGlobal(Offset.zero);
+                                  final box =
+                                      buttonContext.findRenderObject()
+                                          as RenderBox;
+                                  final position = box.localToGlobal(
+                                    Offset.zero,
+                                  );
                                   final sharePositionOrigin = Rect.fromLTWH(
                                     position.dx,
                                     position.dy,

@@ -11,9 +11,9 @@ class SettingsViewModel extends ChangeNotifier {
     required GetSettingsUseCase getSettingsUseCase,
     required SaveMaxLengthUseCase saveMaxLengthUseCase,
     required SaveThemeModeUseCase saveThemeModeUseCase,
-  })  : _getSettingsUseCase = getSettingsUseCase,
-        _saveMaxLengthUseCase = saveMaxLengthUseCase,
-        _saveThemeModeUseCase = saveThemeModeUseCase;
+  }) : _getSettingsUseCase = getSettingsUseCase,
+       _saveMaxLengthUseCase = saveMaxLengthUseCase,
+       _saveThemeModeUseCase = saveThemeModeUseCase;
 
   SettingsEntity _settings = const SettingsEntity(
     maxLength: 280,

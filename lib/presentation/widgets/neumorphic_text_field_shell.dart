@@ -67,7 +67,9 @@ class NeumorphicTextField extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
-            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondary,
           ),
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,

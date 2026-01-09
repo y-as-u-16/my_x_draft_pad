@@ -8,8 +8,8 @@ class ThemeViewModel extends ChangeNotifier {
   ThemeViewModel({
     required GetSettingsUseCase getSettingsUseCase,
     required SaveThemeModeUseCase saveThemeModeUseCase,
-  })  : _getSettingsUseCase = getSettingsUseCase,
-        _saveThemeModeUseCase = saveThemeModeUseCase;
+  }) : _getSettingsUseCase = getSettingsUseCase,
+       _saveThemeModeUseCase = saveThemeModeUseCase;
 
   ThemeMode _themeMode = ThemeMode.light;
 
