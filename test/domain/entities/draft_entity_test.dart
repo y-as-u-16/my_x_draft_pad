@@ -73,7 +73,8 @@ void main() {
 
         test('30文字を超える場合、省略記号付きで切り詰める', () {
           final entity = DraftEntity(
-            content: 'This is a very long content that exceeds thirty characters',
+            content:
+                'This is a very long content that exceeds thirty characters',
             createdAt: testDate,
             updatedAt: testDate,
           );
