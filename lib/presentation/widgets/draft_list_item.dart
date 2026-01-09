@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimens.dart';
 import '../../core/utils/date_formatter.dart';
-import '../../data/models/draft.dart';
+import '../../domain/entities/draft_entity.dart';
 import 'neumorphic_card.dart';
 
 class DraftListItem extends StatelessWidget {
-  final Draft draft;
+  final DraftEntity draft;
   final VoidCallback? onTap;
   final VoidCallback? onDelete;
 
@@ -43,22 +43,24 @@ class DraftListItem extends StatelessWidget {
       onDismissed: (_) => onDelete?.call(),
       confirmDismiss: (_) async {
         return await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('削除確認'),
-            content: const Text('この下書きを削除しますか？'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('キャンセル'),
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('削除確認'),
+                content: const Text('この下書きを削除しますか？'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('キャンセル'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('削除',
+                        style: TextStyle(color: AppColors.warning)),
+                  ),
+                ],
               ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('削除', style: TextStyle(color: AppColors.warning)),
-              ),
-            ],
-          ),
-        ) ?? false;
+            ) ??
+            false;
       },
       child: NeumorphicCard(
         onTap: onTap,
@@ -80,7 +82,9 @@ class DraftListItem extends StatelessWidget {
                   Text(
                     draft.preview.isEmpty ? '(空の下書き)' : draft.preview,
                     style: TextStyle(
-                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimary,
                       fontSize: 16,
                     ),
                     maxLines: 1,
@@ -90,7 +94,9 @@ class DraftListItem extends StatelessWidget {
                   Text(
                     DateFormatter.formatDateTime(draft.updatedAt),
                     style: TextStyle(
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondary,
                       fontSize: 12,
                     ),
                   ),
@@ -99,7 +105,9 @@ class DraftListItem extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right,
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondary,
             ),
           ],
         ),

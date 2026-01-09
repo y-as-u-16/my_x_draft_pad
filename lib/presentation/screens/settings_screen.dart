@@ -1,53 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimens.dart';
-import '../../core/constants/db_constants.dart';
+import '../../core/di/injection_container.dart';
 import '../../core/utils/neumorphic_decorations.dart';
+import '../viewmodels/settings_viewmodel.dart';
+import '../viewmodels/theme_viewmodel.dart';
 import '../widgets/neumorphic_button.dart';
 import '../widgets/neumorphic_card.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => sl<SettingsViewModel>()..loadSettings(),
+      child: const _SettingsScreenContent(),
+    );
+  }
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
-  int _maxLength = DbConstants.defaultMaxLength;
-  bool _isDarkMode = false;
+class _SettingsScreenContent extends StatefulWidget {
+  const _SettingsScreenContent();
+
+  @override
+  State<_SettingsScreenContent> createState() => _SettingsScreenContentState();
+}
+
+class _SettingsScreenContentState extends State<_SettingsScreenContent> {
   final TextEditingController _maxLengthController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    _loadSettings();
+  void dispose() {
+    _maxLengthController.dispose();
+    super.dispose();
   }
 
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _maxLength = prefs.getInt(DbConstants.settingMaxLength) ?? DbConstants.defaultMaxLength;
-      _isDarkMode = prefs.getBool(DbConstants.settingThemeMode) ?? false;
-      _maxLengthController.text = _maxLength.toString();
-    });
-  }
-
-  Future<void> _saveMaxLength(int value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(DbConstants.settingMaxLength, value);
-    setState(() => _maxLength = value);
-  }
-
-  Future<void> _saveThemeMode(bool isDark) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(DbConstants.settingThemeMode, isDark);
-    setState(() => _isDarkMode = isDark);
-  }
-
-  void _showMaxLengthDialog() {
-    _maxLengthController.text = _maxLength.toString();
+  void _showMaxLengthDialog(BuildContext context, SettingsViewModel viewModel) {
+    _maxLengthController.text = viewModel.maxLength.toString();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -69,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onPressed: () {
               final value = int.tryParse(_maxLengthController.text);
               if (value != null && value > 0) {
-                _saveMaxLength(value);
+                viewModel.saveMaxLength(value);
                 Navigator.pop(context);
               }
             },
@@ -81,15 +73,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   @override
-  void dispose() {
-    _maxLengthController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.backgroundDark : AppColors.backgroundLight;
+    final bgColor =
+        isDark ? AppColors.backgroundDark : AppColors.backgroundLight;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -110,19 +97,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Row(
                 children: [
                   NeumorphicButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => context.pop(),
                     padding: const EdgeInsets.all(AppDimens.paddingSmall),
                     borderRadius: AppDimens.radiusSmall,
                     child: Icon(
                       Icons.arrow_back,
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(width: AppDimens.paddingMedium),
                   Text(
                     '設定',
                     style: TextStyle(
-                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimary,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -132,135 +123,163 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             // Settings List
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(vertical: AppDimens.paddingSmall),
-                children: [
-                  // Max Length Setting
-                  NeumorphicCard(
-                    onTap: _showMaxLengthDialog,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.text_fields,
-                          color: AppColors.accent,
-                        ),
-                        const SizedBox(width: AppDimens.paddingMedium),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '上限文字数',
-                                style: TextStyle(
-                                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+              child: Consumer<SettingsViewModel>(
+                builder: (context, viewModel, child) {
+                  return ListView(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: AppDimens.paddingSmall),
+                    children: [
+                      // Max Length Setting
+                      NeumorphicCard(
+                        onTap: () => _showMaxLengthDialog(context, viewModel),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.text_fields,
+                              color: AppColors.accent,
+                            ),
+                            const SizedBox(width: AppDimens.paddingMedium),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '上限文字数',
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? AppColors.textPrimaryDark
+                                          : AppColors.textPrimary,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(height: AppDimens.paddingXSmall),
+                                  Text(
+                                    'Xの投稿上限に合わせて設定',
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? AppColors.textSecondaryDark
+                                          : AppColors.textSecondary,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: AppDimens.paddingXSmall),
-                              Text(
-                                'Xの投稿上限に合わせて設定',
-                                style: TextStyle(
-                                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                                  fontSize: 12,
-                                ),
+                            ),
+                            Text(
+                              '${viewModel.maxLength}',
+                              style: TextStyle(
+                                color: AppColors.accent,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: AppDimens.paddingSmall),
+                            Icon(
+                              Icons.chevron_right,
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : AppColors.textSecondary,
+                            ),
+                          ],
                         ),
-                        Text(
-                          '$_maxLength',
-                          style: TextStyle(
-                            color: AppColors.accent,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: AppDimens.paddingSmall),
-                        Icon(
-                          Icons.chevron_right,
-                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Theme Toggle
-                  NeumorphicCard(
-                    child: Row(
-                      children: [
-                        Icon(
-                          _isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                          color: AppColors.accent,
-                        ),
-                        const SizedBox(width: AppDimens.paddingMedium),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'ダークモード',
-                                style: TextStyle(
-                                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                      ),
+                      // Theme Toggle
+                      Consumer<ThemeViewModel>(
+                        builder: (context, themeViewModel, child) {
+                          return NeumorphicCard(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  themeViewModel.isDarkMode
+                                      ? Icons.dark_mode
+                                      : Icons.light_mode,
+                                  color: AppColors.accent,
                                 ),
-                              ),
-                              const SizedBox(height: AppDimens.paddingXSmall),
-                              Text(
-                                '画面の表示テーマを切り替え',
-                                style: TextStyle(
-                                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                                  fontSize: 12,
+                                const SizedBox(width: AppDimens.paddingMedium),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'ダークモード',
+                                        style: TextStyle(
+                                          color: isDark
+                                              ? AppColors.textPrimaryDark
+                                              : AppColors.textPrimary,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                          height: AppDimens.paddingXSmall),
+                                      Text(
+                                        '画面の表示テーマを切り替え',
+                                        style: TextStyle(
+                                          color: isDark
+                                              ? AppColors.textSecondaryDark
+                                              : AppColors.textSecondary,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Switch(
-                          value: _isDarkMode,
-                          onChanged: _saveThemeMode,
-                          activeTrackColor: AppColors.accent.withValues(alpha: 0.5),
-                          activeThumbColor: AppColors.accent,
-                        ),
-                      ],
-                    ),
-                  ),
-                  // App Info
-                  NeumorphicCard(
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.info_outline,
-                          color: AppColors.accent,
-                        ),
-                        const SizedBox(width: AppDimens.paddingMedium),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'X Draft Pad',
-                                style: TextStyle(
-                                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                                Switch(
+                                  value: themeViewModel.isDarkMode,
+                                  onChanged: themeViewModel.setThemeMode,
+                                  activeTrackColor:
+                                      AppColors.accent.withValues(alpha: 0.5),
+                                  activeThumbColor: AppColors.accent,
                                 ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      // App Info
+                      NeumorphicCard(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              color: AppColors.accent,
+                            ),
+                            const SizedBox(width: AppDimens.paddingMedium),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'X Draft Pad',
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? AppColors.textPrimaryDark
+                                          : AppColors.textPrimary,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(height: AppDimens.paddingXSmall),
+                                  Text(
+                                    'バージョン 1.0.0',
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? AppColors.textSecondaryDark
+                                          : AppColors.textSecondary,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: AppDimens.paddingXSmall),
-                              Text(
-                                'バージョン 1.0.0',
-                                style: TextStyle(
-                                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ],
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ],
