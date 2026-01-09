@@ -6,8 +6,8 @@ void main() {
   final testDate2 = DateTime(2024, 1, 16, 12, 0);
 
   group('DraftEntity', () {
-    group('constructor', () {
-      test('should create entity with all required fields', () {
+    group('コンストラクタ', () {
+      test('必須フィールドを全て指定してエンティティを作成できる', () {
         final entity = DraftEntity(
           id: 1,
           content: 'Test content',
@@ -21,7 +21,7 @@ void main() {
         expect(entity.updatedAt, testDate);
       });
 
-      test('should allow null id for new drafts', () {
+      test('新規下書きの場合、idをnullにできる', () {
         final entity = DraftEntity(
           content: 'New draft',
           createdAt: testDate,
@@ -33,7 +33,7 @@ void main() {
     });
 
     group('preview', () {
-      test('should return empty string for empty content', () {
+      test('空のcontentの場合、空文字を返す', () {
         final entity = DraftEntity(
           content: '',
           createdAt: testDate,
@@ -43,7 +43,7 @@ void main() {
         expect(entity.preview, '');
       });
 
-      test('should return full content if 30 chars or less', () {
+      test('30文字以下の場合、全文を返す', () {
         final entity = DraftEntity(
           content: 'Short text',
           createdAt: testDate,
@@ -53,7 +53,7 @@ void main() {
         expect(entity.preview, 'Short text');
       });
 
-      test('should truncate content longer than 30 chars with ellipsis', () {
+      test('30文字を超える場合、省略記号付きで切り詰める', () {
         final entity = DraftEntity(
           content: 'This is a very long content that exceeds thirty characters',
           createdAt: testDate,
@@ -64,20 +64,17 @@ void main() {
         expect(entity.preview.length, 33); // 30 chars + '...'
       });
 
-      test(
-        'should return only first line with ellipsis for multiline content',
-        () {
-          final entity = DraftEntity(
-            content: 'First line\nSecond line\nThird line',
-            createdAt: testDate,
-            updatedAt: testDate,
-          );
+      test('複数行の場合、最初の行のみを省略記号付きで返す', () {
+        final entity = DraftEntity(
+          content: 'First line\nSecond line\nThird line',
+          createdAt: testDate,
+          updatedAt: testDate,
+        );
 
-          expect(entity.preview, 'First line...');
-        },
-      );
+        expect(entity.preview, 'First line...');
+      });
 
-      test('should truncate first line if longer than 30 chars in multiline', () {
+      test('複数行で最初の行が30文字を超える場合、30文字で切り詰める', () {
         final entity = DraftEntity(
           content:
               'This is a very long first line that exceeds thirty\nSecond line',
@@ -88,7 +85,7 @@ void main() {
         expect(entity.preview, 'This is a very long first line...');
       });
 
-      test('should handle exactly 30 characters', () {
+      test('ちょうど30文字の場合、そのまま返す', () {
         final content = '123456789012345678901234567890'; // exactly 30 chars
         final entity = DraftEntity(
           content: content,
@@ -112,7 +109,7 @@ void main() {
         );
       });
 
-      test('should return copy with updated id', () {
+      test('idのみを更新したコピーを返す', () {
         final copy = original.copyWith(id: 2);
 
         expect(copy.id, 2);
@@ -121,7 +118,7 @@ void main() {
         expect(copy.updatedAt, original.updatedAt);
       });
 
-      test('should return copy with updated content', () {
+      test('contentのみを更新したコピーを返す', () {
         final copy = original.copyWith(content: 'New content');
 
         expect(copy.id, original.id);
@@ -130,7 +127,7 @@ void main() {
         expect(copy.updatedAt, original.updatedAt);
       });
 
-      test('should return copy with updated updatedAt', () {
+      test('updatedAtのみを更新したコピーを返す', () {
         final copy = original.copyWith(updatedAt: testDate2);
 
         expect(copy.id, original.id);
@@ -139,7 +136,7 @@ void main() {
         expect(copy.updatedAt, testDate2);
       });
 
-      test('should return identical copy when no parameters provided', () {
+      test('パラメータなしの場合、同一内容のコピーを返す', () {
         final copy = original.copyWith();
 
         expect(copy.id, original.id);
@@ -148,7 +145,7 @@ void main() {
         expect(copy.updatedAt, original.updatedAt);
       });
 
-      test('should return copy with multiple updated fields', () {
+      test('複数フィールドを同時に更新したコピーを返す', () {
         final copy = original.copyWith(
           content: 'Updated content',
           updatedAt: testDate2,
@@ -161,8 +158,8 @@ void main() {
       });
     });
 
-    group('equality', () {
-      test('should be equal for same values', () {
+    group('等価性', () {
+      test('同じ値を持つエンティティは等しい', () {
         final entity1 = DraftEntity(
           id: 1,
           content: 'Same content',
@@ -179,7 +176,7 @@ void main() {
         expect(entity1, equals(entity2));
       });
 
-      test('should not be equal for different id', () {
+      test('異なるidを持つエンティティは等しくない', () {
         final entity1 = DraftEntity(
           id: 1,
           content: 'Same content',
@@ -196,7 +193,7 @@ void main() {
         expect(entity1, isNot(equals(entity2)));
       });
 
-      test('should not be equal for different content', () {
+      test('異なるcontentを持つエンティティは等しくない', () {
         final entity1 = DraftEntity(
           id: 1,
           content: 'Content A',
@@ -213,7 +210,7 @@ void main() {
         expect(entity1, isNot(equals(entity2)));
       });
 
-      test('should be equal for same instance', () {
+      test('同一インスタンスは等しい', () {
         final entity = DraftEntity(
           id: 1,
           content: 'Content',
@@ -226,7 +223,7 @@ void main() {
     });
 
     group('hashCode', () {
-      test('should return same hashCode for equal entities', () {
+      test('等しいエンティティは同じhashCodeを返す', () {
         final entity1 = DraftEntity(
           id: 1,
           content: 'Same content',
@@ -243,7 +240,7 @@ void main() {
         expect(entity1.hashCode, equals(entity2.hashCode));
       });
 
-      test('should return different hashCode for different entities', () {
+      test('異なるエンティティは異なるhashCodeを返す', () {
         final entity1 = DraftEntity(
           id: 1,
           content: 'Content A',
