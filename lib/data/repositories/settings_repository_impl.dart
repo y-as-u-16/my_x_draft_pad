@@ -11,10 +11,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
   Future<SettingsEntity> getSettings() async {
     final maxLength = await _localDataSource.getMaxLength();
     final isDarkMode = await _localDataSource.getThemeMode();
-    return SettingsEntity(
-      maxLength: maxLength,
-      isDarkMode: isDarkMode,
-    );
+    return SettingsEntity(maxLength: maxLength, isDarkMode: isDarkMode);
   }
 
   @override

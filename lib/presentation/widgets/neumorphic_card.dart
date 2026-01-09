@@ -25,10 +25,12 @@ class NeumorphicCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final card = Container(
-      margin: margin ?? const EdgeInsets.symmetric(
-        horizontal: AppDimens.paddingMedium,
-        vertical: AppDimens.paddingSmall,
-      ),
+      margin:
+          margin ??
+          const EdgeInsets.symmetric(
+            horizontal: AppDimens.paddingMedium,
+            vertical: AppDimens.paddingSmall,
+          ),
       padding: padding ?? const EdgeInsets.all(AppDimens.paddingMedium),
       decoration: NeumorphicDecorations.raised(
         isDark: isDark,

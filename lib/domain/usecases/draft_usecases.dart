@@ -28,11 +28,7 @@ class CreateDraftUseCase {
 
   Future<int> call(String content) {
     final now = DateTime.now();
-    final draft = DraftEntity(
-      content: content,
-      createdAt: now,
-      updatedAt: now,
-    );
+    final draft = DraftEntity(content: content, createdAt: now, updatedAt: now);
     return _repository.createDraft(draft);
   }
 }

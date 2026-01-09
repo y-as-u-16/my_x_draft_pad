@@ -5,7 +5,8 @@ class AdUnitIds {
   AdUnitIds._();
 
   // Test Ad Unit IDs (for development - used as fallback)
-  static const String _testBannerAndroid = 'ca-app-pub-3940256099942544/6300978111';
+  static const String _testBannerAndroid =
+      'ca-app-pub-3940256099942544/6300978111';
   static const String _testBannerIos = 'ca-app-pub-3940256099942544/2934735716';
 
   static String get bannerAdUnitId {

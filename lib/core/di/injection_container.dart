@@ -28,9 +28,7 @@ Future<void> initializeDependencies() async {
   );
 
   // Repositories
-  sl.registerLazySingleton<DraftRepository>(
-    () => DraftRepositoryImpl(sl()),
-  );
+  sl.registerLazySingleton<DraftRepository>(() => DraftRepositoryImpl(sl()));
   sl.registerLazySingleton<SettingsRepository>(
     () => SettingsRepositoryImpl(sl()),
   );
@@ -49,10 +47,8 @@ Future<void> initializeDependencies() async {
 
   // ViewModels
   sl.registerFactory(
-    () => DraftListViewModel(
-      getAllDraftsUseCase: sl(),
-      deleteDraftUseCase: sl(),
-    ),
+    () =>
+        DraftListViewModel(getAllDraftsUseCase: sl(), deleteDraftUseCase: sl()),
   );
 
   sl.registerFactory(
@@ -64,10 +60,7 @@ Future<void> initializeDependencies() async {
   );
 
   sl.registerLazySingleton(
-    () => ThemeViewModel(
-      getSettingsUseCase: sl(),
-      saveThemeModeUseCase: sl(),
-    ),
+    () => ThemeViewModel(getSettingsUseCase: sl(), saveThemeModeUseCase: sl()),
   );
 }
 

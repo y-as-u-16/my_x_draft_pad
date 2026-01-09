@@ -35,10 +35,7 @@ class DraftListItem extends StatelessWidget {
           color: AppColors.warning,
           borderRadius: BorderRadius.circular(AppDimens.radiusMedium),
         ),
-        child: const Icon(
-          Icons.delete,
-          color: Colors.white,
-        ),
+        child: const Icon(Icons.delete, color: Colors.white),
       ),
       onDismissed: (_) => onDelete?.call(),
       confirmDismiss: (_) async {
@@ -54,8 +51,10 @@ class DraftListItem extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(true),
-                    child: const Text('削除',
-                        style: TextStyle(color: AppColors.warning)),
+                    child: const Text(
+                      '削除',
+                      style: TextStyle(color: AppColors.warning),
+                    ),
                   ),
                 ],
               ),

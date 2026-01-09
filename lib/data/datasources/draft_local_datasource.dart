@@ -15,7 +15,7 @@ class DraftLocalDataSourceImpl implements DraftLocalDataSource {
   final AppDatabase _appDatabase;
 
   DraftLocalDataSourceImpl({AppDatabase? appDatabase})
-      : _appDatabase = appDatabase ?? AppDatabase();
+    : _appDatabase = appDatabase ?? AppDatabase();
 
   Future<Database> get _db => _appDatabase.database;
 

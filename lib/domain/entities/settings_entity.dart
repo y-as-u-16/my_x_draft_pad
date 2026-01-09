@@ -2,15 +2,9 @@ class SettingsEntity {
   final int maxLength;
   final bool isDarkMode;
 
-  const SettingsEntity({
-    required this.maxLength,
-    required this.isDarkMode,
-  });
+  const SettingsEntity({required this.maxLength, required this.isDarkMode});
 
-  SettingsEntity copyWith({
-    int? maxLength,
-    bool? isDarkMode,
-  }) {
+  SettingsEntity copyWith({int? maxLength, bool? isDarkMode}) {
     return SettingsEntity(
       maxLength: maxLength ?? this.maxLength,
       isDarkMode: isDarkMode ?? this.isDarkMode,

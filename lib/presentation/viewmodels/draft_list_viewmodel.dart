@@ -9,8 +9,8 @@ class DraftListViewModel extends ChangeNotifier {
   DraftListViewModel({
     required GetAllDraftsUseCase getAllDraftsUseCase,
     required DeleteDraftUseCase deleteDraftUseCase,
-  })  : _getAllDraftsUseCase = getAllDraftsUseCase,
-        _deleteDraftUseCase = deleteDraftUseCase;
+  }) : _getAllDraftsUseCase = getAllDraftsUseCase,
+       _deleteDraftUseCase = deleteDraftUseCase;
 
   List<DraftEntity> _drafts = [];
   bool _isLoading = false;

@@ -41,7 +41,9 @@ class CharacterCounter extends StatelessWidget {
           Text(
             ' / ',
             style: TextStyle(
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondary,
             ),
           ),
           Text(

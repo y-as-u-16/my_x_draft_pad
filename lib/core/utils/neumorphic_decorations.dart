@@ -10,9 +10,15 @@ class NeumorphicDecorations {
     double borderRadius = AppDimens.radiusMedium,
     Color? color,
   }) {
-    final bgColor = color ?? (isDark ? AppColors.backgroundDark : AppColors.backgroundLight);
-    final shadowTop = isDark ? AppColors.shadowDarkTop : AppColors.shadowLightTop;
-    final shadowBottom = isDark ? AppColors.shadowDarkBottom : AppColors.shadowLightBottom;
+    final bgColor =
+        color ??
+        (isDark ? AppColors.backgroundDark : AppColors.backgroundLight);
+    final shadowTop = isDark
+        ? AppColors.shadowDarkTop
+        : AppColors.shadowLightTop;
+    final shadowBottom = isDark
+        ? AppColors.shadowDarkBottom
+        : AppColors.shadowLightBottom;
 
     return BoxDecoration(
       color: bgColor,
@@ -20,7 +26,10 @@ class NeumorphicDecorations {
       boxShadow: [
         BoxShadow(
           color: shadowTop,
-          offset: const Offset(-AppDimens.shadowOffset, -AppDimens.shadowOffset),
+          offset: const Offset(
+            -AppDimens.shadowOffset,
+            -AppDimens.shadowOffset,
+          ),
           blurRadius: AppDimens.shadowBlur,
         ),
         BoxShadow(
@@ -37,9 +46,15 @@ class NeumorphicDecorations {
     double borderRadius = AppDimens.radiusMedium,
     Color? color,
   }) {
-    final bgColor = color ?? (isDark ? AppColors.backgroundDark : AppColors.backgroundLight);
-    final shadowTop = isDark ? AppColors.shadowDarkTop : AppColors.shadowLightTop;
-    final shadowBottom = isDark ? AppColors.shadowDarkBottom : AppColors.shadowLightBottom;
+    final bgColor =
+        color ??
+        (isDark ? AppColors.backgroundDark : AppColors.backgroundLight);
+    final shadowTop = isDark
+        ? AppColors.shadowDarkTop
+        : AppColors.shadowLightTop;
+    final shadowBottom = isDark
+        ? AppColors.shadowDarkBottom
+        : AppColors.shadowLightBottom;
 
     return BoxDecoration(
       color: bgColor,
@@ -66,7 +81,9 @@ class NeumorphicDecorations {
     double borderRadius = AppDimens.radiusMedium,
     Color? color,
   }) {
-    final bgColor = color ?? (isDark ? AppColors.backgroundDark : AppColors.backgroundLight);
+    final bgColor =
+        color ??
+        (isDark ? AppColors.backgroundDark : AppColors.backgroundLight);
 
     return BoxDecoration(
       color: bgColor,
@@ -79,9 +96,15 @@ class NeumorphicDecorations {
     double borderRadius = AppDimens.radiusMedium,
     Color? color,
   }) {
-    final bgColor = color ?? (isDark ? AppColors.backgroundDark : AppColors.backgroundLight);
-    final shadowTop = isDark ? AppColors.shadowDarkTop : AppColors.shadowLightTop;
-    final shadowBottom = isDark ? AppColors.shadowDarkBottom : AppColors.shadowLightBottom;
+    final bgColor =
+        color ??
+        (isDark ? AppColors.backgroundDark : AppColors.backgroundLight);
+    final shadowTop = isDark
+        ? AppColors.shadowDarkTop
+        : AppColors.shadowLightTop;
+    final shadowBottom = isDark
+        ? AppColors.shadowDarkBottom
+        : AppColors.shadowLightBottom;
 
     return BoxDecoration(
       color: bgColor,
@@ -89,12 +112,7 @@ class NeumorphicDecorations {
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [
-          shadowBottom,
-          bgColor,
-          bgColor,
-          shadowTop,
-        ],
+        colors: [shadowBottom, bgColor, bgColor, shadowTop],
         stops: const [0.0, 0.3, 0.7, 1.0],
       ),
     );

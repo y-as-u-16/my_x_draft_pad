@@ -13,11 +13,11 @@ class DraftEditViewModel extends ChangeNotifier {
     required UpdateDraftUseCase updateDraftUseCase,
     required GetSettingsUseCase getSettingsUseCase,
     DraftEntity? initialDraft,
-  })  : _createDraftUseCase = createDraftUseCase,
-        _updateDraftUseCase = updateDraftUseCase,
-        _getSettingsUseCase = getSettingsUseCase,
-        _draft = initialDraft,
-        _content = initialDraft?.content ?? '';
+  }) : _createDraftUseCase = createDraftUseCase,
+       _updateDraftUseCase = updateDraftUseCase,
+       _getSettingsUseCase = getSettingsUseCase,
+       _draft = initialDraft,
+       _content = initialDraft?.content ?? '';
 
   DraftEntity? _draft;
   String _content;
