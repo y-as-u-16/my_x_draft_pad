@@ -1,46 +1,28 @@
-class Draft {
+class DraftEntity {
   final int? id;
   final String content;
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  Draft({
+  const DraftEntity({
     this.id,
     required this.content,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  Draft copyWith({
+  DraftEntity copyWith({
     int? id,
     String? content,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return Draft(
+    return DraftEntity(
       id: id ?? this.id,
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
-  }
-
-  factory Draft.fromMap(Map<String, dynamic> map) {
-    return Draft(
-      id: map['id'] as int?,
-      content: map['content'] as String,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at'] as int),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updated_at'] as int),
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'content': content,
-      'created_at': createdAt.millisecondsSinceEpoch,
-      'updated_at': updatedAt.millisecondsSinceEpoch,
-    };
   }
 
   String get preview {
@@ -51,4 +33,18 @@ class Draft {
     }
     return lines.length < content.length ? '$lines...' : lines;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DraftEntity &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          content == other.content &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^ content.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode;
 }
