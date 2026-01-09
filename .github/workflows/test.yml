@@ -6,10 +6,6 @@ on:
       - main
       - master
       - develop
-  push:
-    branches:
-      - main
-      - master
 
 jobs:
   test:
@@ -43,10 +39,35 @@ jobs:
       - name: Run tests
         run: flutter test --coverage
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        if: always()
+      - name: Calculate coverage percentage
+        id: coverage
+        run: |
+          if [ -f coverage/lcov.info ]; then
+            COVERAGE=$(lcov --summary coverage/lcov.info 2>&1 | grep -oP 'lines......: \K[0-9.]+')
+            echo "percentage=${COVERAGE}" >> $GITHUB_OUTPUT
+            echo "Coverage: ${COVERAGE}%"
+          else
+            echo "percentage=N/A" >> $GITHUB_OUTPUT
+            echo "Coverage report not found"
+          fi
+
+      - name: Send coverage email
+        uses: dawidd6/action-send-mail@v3
         with:
-          name: coverage-report
-          path: coverage/
-          retention-days: 7
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "[${{ github.repository }}] Coverage Report - ${{ github.head_ref || github.ref_name }}"
+          to: ${{ secrets.COVERAGE_EMAIL_TO }}
+          from: ${{ secrets.SMTP_FROM }}
+          body: |
+            Coverage Report for ${{ github.repository }}
+
+            Branch: ${{ github.head_ref || github.ref_name }}
+            Commit: ${{ github.sha }}
+            PR: #${{ github.event.pull_request.number }}
+
+            Coverage: ${{ steps.coverage.outputs.percentage }}%
+
+            Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
