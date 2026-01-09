@@ -42,7 +42,7 @@ jobs:
       - name: Display coverage
         run: |
           if [ -f coverage/lcov.info ]; then
-            COVERAGE=$(lcov --summary coverage/lcov.info 2>&1 | grep -oP 'lines......: \K[0-9.]+')
+            COVERAGE=$(awk -F ':' 'BEGIN {hit=0; found=0} /^LH:/ {hit+=$2} /^LF:/ {found+=$2} END {if(found>0) printf "%.1f", hit/found*100; else print "0"}' coverage/lcov.info)
             echo "## Coverage Report" >> $GITHUB_STEP_SUMMARY
             echo "**Coverage: ${COVERAGE}%**" >> $GITHUB_STEP_SUMMARY
           else
