@@ -5,15 +5,13 @@ import 'package:share_plus/share_plus.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimens.dart';
 import '../../core/di/injection_container.dart';
-import '../../core/utils/neumorphic_decorations.dart';
 import '../../domain/entities/draft_entity.dart';
 import '../../domain/usecases/draft_usecases.dart';
 import '../../domain/usecases/settings_usecases.dart';
 import '../../ads/ad_manager.dart';
 import '../viewmodels/draft_edit_viewmodel.dart';
-import '../widgets/neumorphic_button.dart';
-import '../widgets/neumorphic_text_field_shell.dart';
-import '../widgets/character_counter.dart';
+import '../widgets/pill_button.dart';
+import '../widgets/circular_char_counter.dart';
 
 class DraftEditScreen extends StatelessWidget {
   final DraftEntity? draft;
@@ -113,6 +111,11 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
     final bgColor = isDark
         ? AppColors.backgroundDark
         : AppColors.backgroundLight;
+    final borderColor = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final textPrimary =
+        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final textSecondary =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
     return Consumer<DraftEditViewModel>(
       builder: (context, viewModel, child) {
@@ -132,46 +135,36 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
                 children: [
                   // AppBar
                   Container(
-                    margin: const EdgeInsets.all(AppDimens.paddingMedium),
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimens.paddingSmall,
                       vertical: AppDimens.paddingSmall,
                     ),
-                    decoration: NeumorphicDecorations.raised(
-                      isDark: isDark,
-                      borderRadius: AppDimens.radiusMedium,
+                    decoration: BoxDecoration(
+                      color: bgColor,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: borderColor,
+                          width: AppDimens.borderWidth,
+                        ),
+                      ),
                     ),
                     child: Row(
                       children: [
-                        NeumorphicButton(
+                        IconButton(
                           onPressed: () async {
                             final shouldPop = await _onWillPop(context);
                             if (shouldPop && context.mounted) {
                               context.pop(true);
                             }
                           },
-                          padding: const EdgeInsets.all(AppDimens.paddingSmall),
-                          borderRadius: AppDimens.radiusSmall,
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: isDark
-                                ? AppColors.textSecondaryDark
-                                : AppColors.textSecondary,
+                          icon: Icon(
+                            Icons.close,
+                            color: textPrimary,
+                            size: AppDimens.iconMedium,
                           ),
                         ),
                         const Spacer(),
-                        Text(
-                          viewModel.isEditing ? '編集' : '新規作成',
-                          style: TextStyle(
-                            color: isDark
-                                ? AppColors.textPrimaryDark
-                                : AppColors.textPrimary,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Spacer(),
-                        NeumorphicButton(
+                        PillButton(
                           onPressed: () async {
                             final success = await viewModel.saveDraft();
                             if (success && context.mounted) {
@@ -183,15 +176,11 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
                               );
                             }
                           },
-                          padding: const EdgeInsets.all(AppDimens.paddingSmall),
-                          borderRadius: AppDimens.radiusSmall,
-                          child: Icon(
-                            Icons.save,
-                            color: viewModel.hasChanges
-                                ? AppColors.accent
-                                : (isDark
-                                      ? AppColors.textSecondaryDark
-                                      : AppColors.textSecondary),
+                          child: const Text(
+                            '保存',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ],
@@ -199,8 +188,8 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
                   ),
                   // Text Field
                   Expanded(
-                    child: NeumorphicTextFieldShell(
-                      margin: const EdgeInsets.symmetric(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: AppDimens.paddingMedium,
                       ),
                       child: TextField(
@@ -211,120 +200,83 @@ class _DraftEditScreenContentState extends State<_DraftEditScreenContent> {
                         onChanged: viewModel.updateContent,
                         textAlignVertical: TextAlignVertical.top,
                         style: TextStyle(
-                          color: isDark
-                              ? AppColors.textPrimaryDark
-                              : AppColors.textPrimary,
+                          color: textPrimary,
                           fontSize: 16,
                           height: 1.5,
                         ),
                         decoration: InputDecoration(
                           hintText: 'ここに下書きを入力...',
-                          hintStyle: TextStyle(
-                            color: isDark
-                                ? AppColors.textSecondaryDark
-                                : AppColors.textSecondary,
-                          ),
+                          hintStyle: TextStyle(color: textSecondary),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
+                          contentPadding: const EdgeInsets.only(
+                            top: AppDimens.paddingMedium,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  // Character Counter
-                  Padding(
+                  // Bottom Toolbar
+                  Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimens.paddingMedium,
                       vertical: AppDimens.paddingSmall,
                     ),
+                    decoration: BoxDecoration(
+                      color: bgColor,
+                      border: Border(
+                        top: BorderSide(
+                          color: borderColor,
+                          width: AppDimens.borderWidth,
+                        ),
+                      ),
+                    ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CharacterCounter(
+                        Builder(
+                          builder: (buttonContext) {
+                            return PillButton(
+                              style: PillButtonStyle.outline,
+                              onPressed: () {
+                                final box =
+                                    buttonContext.findRenderObject()
+                                        as RenderBox;
+                                final position = box.localToGlobal(
+                                  Offset.zero,
+                                );
+                                final sharePositionOrigin = Rect.fromLTWH(
+                                  position.dx,
+                                  position.dy,
+                                  box.size.width,
+                                  box.size.height,
+                                );
+                                _shareToX(buttonContext, sharePositionOrigin);
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.share,
+                                    size: 16,
+                                    color: textPrimary,
+                                  ),
+                                  const SizedBox(width: AppDimens.paddingXSmall),
+                                  Text(
+                                    'Xで投稿',
+                                    style: TextStyle(
+                                      color: textPrimary,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        const Spacer(),
+                        CircularCharCounter(
                           currentLength: viewModel.currentLength,
                           maxLength: viewModel.maxLength,
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Action Buttons
-                  Padding(
-                    padding: const EdgeInsets.all(AppDimens.paddingMedium),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: NeumorphicButton(
-                            onPressed: () async {
-                              final success = await viewModel.saveDraft();
-                              if (success && context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('保存しました'),
-                                    duration: Duration(seconds: 1),
-                                  ),
-                                );
-                              }
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.save,
-                                  color: isDark
-                                      ? AppColors.textPrimaryDark
-                                      : AppColors.textPrimary,
-                                ),
-                                const SizedBox(width: AppDimens.paddingSmall),
-                                Text(
-                                  '保存',
-                                  style: TextStyle(
-                                    color: isDark
-                                        ? AppColors.textPrimaryDark
-                                        : AppColors.textPrimary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: AppDimens.paddingMedium),
-                        Expanded(
-                          child: Builder(
-                            builder: (buttonContext) {
-                              return NeumorphicButton(
-                                onPressed: () {
-                                  final box =
-                                      buttonContext.findRenderObject()
-                                          as RenderBox;
-                                  final position = box.localToGlobal(
-                                    Offset.zero,
-                                  );
-                                  final sharePositionOrigin = Rect.fromLTWH(
-                                    position.dx,
-                                    position.dy,
-                                    box.size.width,
-                                    box.size.height,
-                                  );
-                                  _shareToX(buttonContext, sharePositionOrigin);
-                                },
-                                isAccent: true,
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.share, color: Colors.white),
-                                    SizedBox(width: AppDimens.paddingSmall),
-                                    Text(
-                                      'Xで投稿',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
                         ),
                       ],
                     ),
