@@ -3,25 +3,23 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
+  // Common
+  static const Color accent = Color(0xFF1D9BF0); // X Blue
+  static const Color warning = Color(0xFFF4212E);
+  static const Color success = Color(0xFF00BA7C);
+  static const Color warningYellow = Color(0xFFFFD400);
+
   // Light Theme
-  static const Color backgroundLight = Color(0xFFE0E5EC);
-  static const Color cardLight = Color(0xFFE0E5EC);
-  static const Color textPrimary = Color(0xFF333333);
-  static const Color textSecondary = Color(0xFF777777);
-  static const Color accent = Color(0xFF1DA1F2); // X Blue
-  static const Color warning = Color(0xFFE53935);
+  static const Color backgroundLight = Color(0xFFFFFFFF);
+  static const Color surfaceLight = Color(0xFFF7F9F9);
+  static const Color borderLight = Color(0xFFEFF3F4);
+  static const Color textPrimaryLight = Color(0xFF0F1419);
+  static const Color textSecondaryLight = Color(0xFF536471);
 
   // Dark Theme
-  static const Color backgroundDark = Color(0xFF2D2D2D);
-  static const Color cardDark = Color(0xFF2D2D2D);
-  static const Color textPrimaryDark = Color(0xFFE0E0E0);
-  static const Color textSecondaryDark = Color(0xFF9E9E9E);
-
-  // Neumorphic shadows (Light)
-  static Color shadowLightTop = Colors.white.withValues(alpha: 0.8);
-  static Color shadowLightBottom = Colors.black.withValues(alpha: 0.15);
-
-  // Neumorphic shadows (Dark)
-  static Color shadowDarkTop = Colors.white.withValues(alpha: 0.1);
-  static Color shadowDarkBottom = Colors.black.withValues(alpha: 0.4);
+  static const Color backgroundDark = Color(0xFF000000);
+  static const Color surfaceDark = Color(0xFF16181C);
+  static const Color borderDark = Color(0xFF2F3336);
+  static const Color textPrimaryDark = Color(0xFFE7E9EA);
+  static const Color textSecondaryDark = Color(0xFF71767B);
 }
