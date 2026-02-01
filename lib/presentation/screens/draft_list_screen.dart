@@ -5,12 +5,10 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimens.dart';
 import '../../core/di/injection_container.dart';
 import '../../core/router/app_router.dart';
-import '../../core/utils/neumorphic_decorations.dart';
 import '../../domain/entities/draft_entity.dart';
 import '../../ads/ad_manager.dart';
 import '../viewmodels/draft_list_viewmodel.dart';
 import '../widgets/draft_list_item.dart';
-import '../widgets/neumorphic_button.dart';
 
 class DraftListScreen extends StatelessWidget {
   const DraftListScreen({super.key});
@@ -44,6 +42,11 @@ class _DraftListScreenContent extends StatelessWidget {
     final bgColor = isDark
         ? AppColors.backgroundDark
         : AppColors.backgroundLight;
+    final borderColor = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final textPrimary =
+        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final textSecondary =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -52,37 +55,36 @@ class _DraftListScreenContent extends StatelessWidget {
           children: [
             // AppBar
             Container(
-              margin: const EdgeInsets.all(AppDimens.paddingMedium),
               padding: const EdgeInsets.symmetric(
                 horizontal: AppDimens.paddingMedium,
                 vertical: AppDimens.paddingSmall,
               ),
-              decoration: NeumorphicDecorations.raised(
-                isDark: isDark,
-                borderRadius: AppDimens.radiusMedium,
+              decoration: BoxDecoration(
+                color: bgColor,
+                border: Border(
+                  bottom: BorderSide(
+                    color: borderColor,
+                    width: AppDimens.borderWidth,
+                  ),
+                ),
               ),
               child: Row(
                 children: [
                   Text(
                     'X Draft Pad',
                     style: TextStyle(
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : AppColors.textPrimary,
+                      color: textPrimary,
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   const Spacer(),
-                  NeumorphicButton(
+                  IconButton(
                     onPressed: () => _navigateToSettings(context),
-                    padding: const EdgeInsets.all(AppDimens.paddingSmall),
-                    borderRadius: AppDimens.radiusSmall,
-                    child: Icon(
+                    icon: Icon(
                       Icons.settings,
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondary,
+                      color: textSecondary,
+                      size: AppDimens.iconMedium,
                     ),
                   ),
                 ],
@@ -104,17 +106,13 @@ class _DraftListScreenContent extends StatelessWidget {
                           Icon(
                             Icons.note_add,
                             size: 64,
-                            color: isDark
-                                ? AppColors.textSecondaryDark
-                                : AppColors.textSecondary,
+                            color: textSecondary,
                           ),
                           const SizedBox(height: AppDimens.paddingMedium),
                           Text(
                             '下書きがありません',
                             style: TextStyle(
-                              color: isDark
-                                  ? AppColors.textSecondaryDark
-                                  : AppColors.textSecondary,
+                              color: textSecondary,
                               fontSize: 16,
                             ),
                           ),
@@ -122,9 +120,7 @@ class _DraftListScreenContent extends StatelessWidget {
                           Text(
                             '+ボタンで新規作成',
                             style: TextStyle(
-                              color: isDark
-                                  ? AppColors.textSecondaryDark
-                                  : AppColors.textSecondary,
+                              color: textSecondary,
                               fontSize: 14,
                             ),
                           ),
@@ -158,17 +154,12 @@ class _DraftListScreenContent extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: Container(
-        decoration: NeumorphicDecorations.raised(
-          isDark: isDark,
-          borderRadius: AppDimens.radiusCircle,
-        ),
-        child: FloatingActionButton(
-          onPressed: () => _navigateToEdit(context),
-          backgroundColor: AppColors.accent,
-          elevation: 0,
-          child: const Icon(Icons.add, color: Colors.white),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _navigateToEdit(context),
+        backgroundColor: AppColors.accent,
+        elevation: 0,
+        highlightElevation: 0,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
