@@ -36,21 +36,44 @@ class MyApp extends StatelessWidget {
                 primary: AppColors.accent,
                 secondary: AppColors.accent,
                 surface: AppColors.backgroundLight,
+                onSurface: AppColors.textPrimaryLight,
               ),
+              dividerColor: AppColors.borderLight,
               appBarTheme: AppBarTheme(
                 backgroundColor: AppColors.backgroundLight,
                 elevation: 0,
-                iconTheme: IconThemeData(color: AppColors.textPrimary),
+                scrolledUnderElevation: 0,
+                iconTheme: IconThemeData(color: AppColors.textPrimaryLight),
                 titleTextStyle: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: AppColors.textPrimaryLight,
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               textTheme: TextTheme(
-                bodyLarge: TextStyle(color: AppColors.textPrimary),
-                bodyMedium: TextStyle(color: AppColors.textPrimary),
-                bodySmall: TextStyle(color: AppColors.textSecondary),
+                bodyLarge: TextStyle(color: AppColors.textPrimaryLight),
+                bodyMedium: TextStyle(color: AppColors.textPrimaryLight),
+                bodySmall: TextStyle(color: AppColors.textSecondaryLight),
+              ),
+              switchTheme: SwitchThemeData(
+                thumbColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return Colors.white;
+                  }
+                  return AppColors.textSecondaryLight;
+                }),
+                trackColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return AppColors.accent;
+                  }
+                  return AppColors.borderLight;
+                }),
+              ),
+              dialogTheme: DialogThemeData(
+                backgroundColor: AppColors.surfaceLight,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
             ),
             darkTheme: ThemeData(
@@ -60,21 +83,44 @@ class MyApp extends StatelessWidget {
                 primary: AppColors.accent,
                 secondary: AppColors.accent,
                 surface: AppColors.backgroundDark,
+                onSurface: AppColors.textPrimaryDark,
               ),
+              dividerColor: AppColors.borderDark,
               appBarTheme: AppBarTheme(
                 backgroundColor: AppColors.backgroundDark,
                 elevation: 0,
+                scrolledUnderElevation: 0,
                 iconTheme: IconThemeData(color: AppColors.textPrimaryDark),
                 titleTextStyle: TextStyle(
                   color: AppColors.textPrimaryDark,
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               textTheme: TextTheme(
                 bodyLarge: TextStyle(color: AppColors.textPrimaryDark),
                 bodyMedium: TextStyle(color: AppColors.textPrimaryDark),
                 bodySmall: TextStyle(color: AppColors.textSecondaryDark),
+              ),
+              switchTheme: SwitchThemeData(
+                thumbColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return Colors.white;
+                  }
+                  return AppColors.textSecondaryDark;
+                }),
+                trackColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return AppColors.accent;
+                  }
+                  return AppColors.borderDark;
+                }),
+              ),
+              dialogTheme: DialogThemeData(
+                backgroundColor: AppColors.surfaceDark,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
             ),
           );
