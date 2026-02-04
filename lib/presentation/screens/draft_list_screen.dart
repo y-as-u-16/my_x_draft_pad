@@ -154,12 +154,15 @@ class _DraftListScreenContent extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigateToEdit(context),
-        backgroundColor: AppColors.accent,
-        elevation: 0,
-        highlightElevation: 0,
-        child: const Icon(Icons.add, color: Colors.white),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: AppDimens.adBannerHeight),
+        child: FloatingActionButton(
+          onPressed: () => _navigateToEdit(context),
+          backgroundColor: AppColors.accent,
+          elevation: 0,
+          highlightElevation: 0,
+          child: const Icon(Icons.add, color: Colors.white),
+        ),
       ),
     );
   }
