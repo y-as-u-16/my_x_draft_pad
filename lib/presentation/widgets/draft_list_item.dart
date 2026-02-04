@@ -3,7 +3,6 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimens.dart';
 import '../../core/utils/date_formatter.dart';
 import '../../domain/entities/draft_entity.dart';
-import 'neumorphic_card.dart';
 
 class DraftListItem extends StatelessWidget {
   final DraftEntity draft;
@@ -20,6 +19,11 @@ class DraftListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final textPrimary =
+        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final textSecondary =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
     return Dismissible(
       key: Key('draft_${draft.id}'),
@@ -27,14 +31,7 @@ class DraftListItem extends StatelessWidget {
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: AppDimens.paddingLarge),
-        margin: const EdgeInsets.symmetric(
-          horizontal: AppDimens.paddingMedium,
-          vertical: AppDimens.paddingSmall,
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.warning,
-          borderRadius: BorderRadius.circular(AppDimens.radiusMedium),
-        ),
+        color: AppColors.warning,
         child: const Icon(Icons.delete, color: Colors.white),
       ),
       onDismissed: (_) => onDelete?.call(),
@@ -61,54 +58,51 @@ class DraftListItem extends StatelessWidget {
             ) ??
             false;
       },
-      child: NeumorphicCard(
+      child: InkWell(
         onTap: onTap,
-        child: Row(
-          children: [
-            Container(
-              width: 4,
-              height: 48,
-              decoration: BoxDecoration(
-                color: AppColors.accent,
-                borderRadius: BorderRadius.circular(2),
-              ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimens.paddingMedium,
+            vertical: AppDimens.paddingMedium,
+          ),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: borderColor, width: AppDimens.borderWidth),
             ),
-            const SizedBox(width: AppDimens.paddingMedium),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    draft.preview.isEmpty ? '(空の下書き)' : draft.preview,
-                    style: TextStyle(
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : AppColors.textPrimary,
-                      fontSize: 16,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      draft.preview.isEmpty ? '(空の下書き)' : draft.preview,
+                      style: TextStyle(
+                        color: textPrimary,
+                        fontSize: 15,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: AppDimens.paddingXSmall),
-                  Text(
-                    DateFormatter.formatDateTime(draft.updatedAt),
-                    style: TextStyle(
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondary,
-                      fontSize: 12,
+                    const SizedBox(height: AppDimens.paddingXSmall),
+                    Text(
+                      DateFormatter.formatDateTime(draft.updatedAt),
+                      style: TextStyle(
+                        color: textSecondary,
+                        fontSize: 13,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : AppColors.textSecondary,
-            ),
-          ],
+              Icon(
+                Icons.chevron_right,
+                color: textSecondary,
+                size: AppDimens.iconMedium,
+              ),
+            ],
+          ),
         ),
       ),
     );
