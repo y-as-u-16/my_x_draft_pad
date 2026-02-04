@@ -4,11 +4,8 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimens.dart';
 import '../../core/di/injection_container.dart';
-import '../../core/utils/neumorphic_decorations.dart';
 import '../viewmodels/settings_viewmodel.dart';
 import '../viewmodels/theme_viewmodel.dart';
-import '../widgets/neumorphic_button.dart';
-import '../widgets/neumorphic_card.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -78,6 +75,11 @@ class _SettingsScreenContentState extends State<_SettingsScreenContent> {
     final bgColor = isDark
         ? AppColors.backgroundDark
         : AppColors.backgroundLight;
+    final borderColor = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final textPrimary =
+        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final textSecondary =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -86,37 +88,36 @@ class _SettingsScreenContentState extends State<_SettingsScreenContent> {
           children: [
             // AppBar
             Container(
-              margin: const EdgeInsets.all(AppDimens.paddingMedium),
               padding: const EdgeInsets.symmetric(
                 horizontal: AppDimens.paddingSmall,
                 vertical: AppDimens.paddingSmall,
               ),
-              decoration: NeumorphicDecorations.raised(
-                isDark: isDark,
-                borderRadius: AppDimens.radiusMedium,
+              decoration: BoxDecoration(
+                color: bgColor,
+                border: Border(
+                  bottom: BorderSide(
+                    color: borderColor,
+                    width: AppDimens.borderWidth,
+                  ),
+                ),
               ),
               child: Row(
                 children: [
-                  NeumorphicButton(
+                  IconButton(
                     onPressed: () => context.pop(),
-                    padding: const EdgeInsets.all(AppDimens.paddingSmall),
-                    borderRadius: AppDimens.radiusSmall,
-                    child: Icon(
+                    icon: Icon(
                       Icons.arrow_back,
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondary,
+                      color: textPrimary,
+                      size: AppDimens.iconMedium,
                     ),
                   ),
-                  const SizedBox(width: AppDimens.paddingMedium),
+                  const SizedBox(width: AppDimens.paddingSmall),
                   Text(
                     '設定',
                     style: TextStyle(
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : AppColors.textPrimary,
+                      color: textPrimary,
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
@@ -127,163 +128,166 @@ class _SettingsScreenContentState extends State<_SettingsScreenContent> {
               child: Consumer<SettingsViewModel>(
                 builder: (context, viewModel, child) {
                   return ListView(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppDimens.paddingSmall,
-                    ),
+                    padding: EdgeInsets.zero,
                     children: [
+                      // Section Header
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: AppDimens.paddingMedium,
+                          top: AppDimens.paddingMedium,
+                          bottom: AppDimens.paddingSmall,
+                        ),
+                        child: Text(
+                          '一般',
+                          style: TextStyle(
+                            color: textSecondary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                       // Max Length Setting
-                      NeumorphicCard(
-                        onTap: () => _showMaxLengthDialog(context, viewModel),
-                        child: Row(
+                      _SettingsItem(
+                        icon: Icons.text_fields,
+                        title: '上限文字数',
+                        subtitle: 'Xの投稿上限に合わせて設定',
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.text_fields, color: AppColors.accent),
-                            const SizedBox(width: AppDimens.paddingMedium),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '上限文字数',
-                                    style: TextStyle(
-                                      color: isDark
-                                          ? AppColors.textPrimaryDark
-                                          : AppColors.textPrimary,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: AppDimens.paddingXSmall,
-                                  ),
-                                  Text(
-                                    'Xの投稿上限に合わせて設定',
-                                    style: TextStyle(
-                                      color: isDark
-                                          ? AppColors.textSecondaryDark
-                                          : AppColors.textSecondary,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                             Text(
                               '${viewModel.maxLength}',
                               style: TextStyle(
-                                color: AppColors.accent,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                                color: textSecondary,
+                                fontSize: 16,
                               ),
                             ),
-                            const SizedBox(width: AppDimens.paddingSmall),
+                            const SizedBox(width: AppDimens.paddingXSmall),
                             Icon(
                               Icons.chevron_right,
-                              color: isDark
-                                  ? AppColors.textSecondaryDark
-                                  : AppColors.textSecondary,
+                              color: textSecondary,
+                              size: AppDimens.iconMedium,
                             ),
                           ],
                         ),
+                        onTap: () => _showMaxLengthDialog(context, viewModel),
                       ),
                       // Theme Toggle
                       Consumer<ThemeViewModel>(
                         builder: (context, themeViewModel, child) {
-                          return NeumorphicCard(
-                            child: Row(
-                              children: [
-                                Icon(
-                                  themeViewModel.isDarkMode
-                                      ? Icons.dark_mode
-                                      : Icons.light_mode,
-                                  color: AppColors.accent,
-                                ),
-                                const SizedBox(width: AppDimens.paddingMedium),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'ダークモード',
-                                        style: TextStyle(
-                                          color: isDark
-                                              ? AppColors.textPrimaryDark
-                                              : AppColors.textPrimary,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: AppDimens.paddingXSmall,
-                                      ),
-                                      Text(
-                                        '画面の表示テーマを切り替え',
-                                        style: TextStyle(
-                                          color: isDark
-                                              ? AppColors.textSecondaryDark
-                                              : AppColors.textSecondary,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Switch(
-                                  value: themeViewModel.isDarkMode,
-                                  onChanged: themeViewModel.setThemeMode,
-                                  activeTrackColor: AppColors.accent.withValues(
-                                    alpha: 0.5,
-                                  ),
-                                  activeThumbColor: AppColors.accent,
-                                ),
-                              ],
+                          return _SettingsItem(
+                            icon: themeViewModel.isDarkMode
+                                ? Icons.dark_mode
+                                : Icons.light_mode,
+                            title: 'ダークモード',
+                            subtitle: '画面の表示テーマを切り替え',
+                            trailing: Switch(
+                              value: themeViewModel.isDarkMode,
+                              onChanged: themeViewModel.setThemeMode,
                             ),
                           );
                         },
                       ),
-                      // App Info
-                      NeumorphicCard(
-                        child: Row(
-                          children: [
-                            Icon(Icons.info_outline, color: AppColors.accent),
-                            const SizedBox(width: AppDimens.paddingMedium),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'X Draft Pad',
-                                    style: TextStyle(
-                                      color: isDark
-                                          ? AppColors.textPrimaryDark
-                                          : AppColors.textPrimary,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: AppDimens.paddingXSmall,
-                                  ),
-                                  Text(
-                                    'バージョン 1.0.0',
-                                    style: TextStyle(
-                                      color: isDark
-                                          ? AppColors.textSecondaryDark
-                                          : AppColors.textSecondary,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                      // Section Header
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: AppDimens.paddingMedium,
+                          top: AppDimens.paddingLarge,
+                          bottom: AppDimens.paddingSmall,
                         ),
+                        child: Text(
+                          'このアプリについて',
+                          style: TextStyle(
+                            color: textSecondary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      // App Info
+                      _SettingsItem(
+                        icon: Icons.info_outline,
+                        title: 'X Draft Pad',
+                        subtitle: 'バージョン 1.0.0',
                       ),
                     ],
                   );
                 },
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  const _SettingsItem({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    this.trailing,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final textPrimary =
+        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final textSecondary =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimens.paddingMedium,
+          vertical: AppDimens.paddingMedium,
+        ),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: borderColor,
+              width: AppDimens.borderWidth,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.accent, size: AppDimens.iconMedium),
+            const SizedBox(width: AppDimens.paddingMedium),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: AppDimens.paddingXSmall),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: textSecondary,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (trailing != null) trailing!,
           ],
         ),
       ),
