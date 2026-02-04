@@ -19,6 +19,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Create .env for CI
+        run: |
+          echo "ADMOB_BANNER_AD_UNIT_ID=TEST" > .env
+
       - name: Run analyzer
         run: flutter analyze
 
